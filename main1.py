@@ -1,7 +1,9 @@
 # creating calculater 
 import tkinter as tk
+# tkinter is a python library that allows you to create a graphical user interface (GUIs).
 
 calculation = "" 
+
 
 def add_to_calculation(symbol):
     global calculation
