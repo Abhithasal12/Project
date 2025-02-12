@@ -24,13 +24,13 @@ def evaluate_calculation():
         text_result.insert(1.0, "Error")
 
 
-
 def clear_filed():
     calculation = ""
     text_result.delete(1.0, "end")
 
+# using tkinter as tk   
 root = tk.Tk()
-root.geometry("300x275")
+root.geometry("400x275")
 
 text_result = tk.Text(root, height=2, width=16, font=("Arial",24),background="Gray")
 text_result.grid(columnspan=5)
