@@ -31,6 +31,7 @@ def clear_filed():
     calculation = ""
     text_result.delete(1.0, "end")
 
+# Delete button 
 def delete_filed():
     global calculation
     calculation = calculation[:-1]
@@ -96,8 +97,9 @@ btn_zero.grid(row=5, column=1)
 btn_percent = tk.Button(root, text="%", command=lambda: add_to_calculation("%"), width=5, font= ("arial",14),background="yellow")
 btn_percent.grid(row=6, column=1)
 
+# This three button have spacific reasons 
 btn_delete = tk.Button(root, text="DEL", command=delete_filed, width=11, font= ("arial",14),background="orange")
-btn_delete.grid(row=6, column=3, columnspan=2)
+btn_delete.grid(row=6, column=3, columnspan=2) 
 
 btn_clear = tk.Button(root, text="C", command=clear_filed , width=11, font= ("arial",14),background="orange")
 btn_clear.grid(row=7, column=1, columnspan=2)
