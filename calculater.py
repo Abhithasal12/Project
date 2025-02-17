@@ -2,16 +2,42 @@
 import tkinter as tk
 # tkinter is a python library that allows you to create a graphical user interface (GUIs).
 
+import mysql.connector
+from datetime import datetime
+
+mydb = mysql.connector.connect(
+  host="127.0.0.1",
+  user="root",
+  password="Asd24@24",
+  database="my_calculator"
+)
+mycursor = mydb.cursor()
+
+mycursor.execute("SELECT * FROM history")
+rows = mycursor.fetchall()
+for row in rows:
+    print(row)
+
+mycursor.close()
+# sql = "INSERT INTO History (expression,result,created_at) VALUES (%s, %s,%s)"
+# val = ("5+3","8", datetime.now())
+# mycursor.execute(sql, val)
+
+# mydb.commit()
+# print("Record inserted successfully!")
+
+
 calculation = "" 
 
 def add_to_calculation(symbol):
     global calculation
     if symbol =="%":
-        calculation += "/100"
+        calculation += "*10/100"
     else:
         calculation += str(symbol)
-        text_result.delete(1.0, "end")
-        text_result.insert(1.0, calculation)
+
+    text_result.delete(1.0, "end")
+    text_result.insert(1.0, calculation)
 
 def evaluate_calculation():
     global calculation
@@ -28,6 +54,7 @@ def evaluate_calculation():
 
 
 def clear_filed():
+    global calculation
     calculation = ""
     text_result.delete(1.0, "end")
 
@@ -106,5 +133,7 @@ btn_clear.grid(row=7, column=1, columnspan=2)
 
 btn_eual = tk.Button(root, text="=", command=evaluate_calculation, width=11, font= ("arial",14),background="orange")
 btn_eual.grid(row=7, column=3, columnspan=2)
+
+
 
 root.mainloop()
