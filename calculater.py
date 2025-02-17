@@ -6,12 +6,19 @@ import mysql.connector
 from datetime import datetime
 
 mydb = mysql.connector.connect(
-  host="127.0.0.1",
+  host="127.0.0.1:3306",
   user="root",
-  password="Asd24@24",
+  password="",
   database="my_calculator"
 )
 mycursor = mydb.cursor()
+
+sql = "INSERT INTO History (expression,result,created_at) VALUES (%s, %s,%s)"
+val = ("5+3","8", datetime.now())
+
+mycursor.execute(sql, val)
+mydb.commit()
+print("Record inserted successfully!")  
 
 mycursor.execute("SELECT * FROM history")
 rows = mycursor.fetchall()
@@ -19,13 +26,6 @@ for row in rows:
     print(row)
 
 mycursor.close()
-# sql = "INSERT INTO History (expression,result,created_at) VALUES (%s, %s,%s)"
-# val = ("5+3","8", datetime.now())
-# mycursor.execute(sql, val)
-
-# mydb.commit()
-# print("Record inserted successfully!")
-
 
 calculation = "" 
 
@@ -47,11 +47,11 @@ def evaluate_calculation():
         calculation = ""
         text_result.delete(1.0, "end")
         text_result.insert(1.0, result)
-    except:
+
+    except  Exception as e:
         clear_filed()
         text_result.insert(1.0, "Error")
-
-
+        print(f"Error: {e}")
 
 def clear_filed():
     global calculation
@@ -63,12 +63,11 @@ def delete_filed():
     global calculation
     calculation = calculation[:-1]
     text_result.delete(1.0, "end")
-    text_result.insert(1.0, calculation)    
+    text_result.insert(1.0, calculation)  
 
 root = tk.Tk()
 root.geometry("300x325")
 root.title("calculator")
-
 
 text_result = tk.Text(root, height=2, width=16, font=("Arial",24),background="Gray")
 text_result.grid(columnspan=5)
@@ -133,7 +132,6 @@ btn_clear.grid(row=7, column=1, columnspan=2)
 
 btn_eual = tk.Button(root, text="=", command=evaluate_calculation, width=11, font= ("arial",14),background="orange")
 btn_eual.grid(row=7, column=3, columnspan=2)
-
 
 
 root.mainloop()
