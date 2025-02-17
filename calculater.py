@@ -2,9 +2,11 @@
 import tkinter as tk
 # tkinter is a python library that allows you to create a graphical user interface (GUIs).
 
+# database connection 
 import mysql.connector
 from datetime import datetime
 
+#connect to the database
 mydb = mysql.connector.connect(
   host="127.0.0.1:3306",
   user="root",
@@ -12,7 +14,7 @@ mydb = mysql.connector.connect(
   database="my_calculator"
 )
 mycursor = mydb.cursor()
-
+# sql query to create column 
 sql = "INSERT INTO History (expression,result,created_at) VALUES (%s, %s,%s)"
 val = ("5+3","8", datetime.now())
 
@@ -24,11 +26,10 @@ mycursor.execute("SELECT * FROM history")
 rows = mycursor.fetchall()
 for row in rows:
     print(row)
-
 mycursor.close()
 
 calculation = "" 
-
+#addition(+,-,/,*)
 def add_to_calculation(symbol):
     global calculation
     if symbol =="%":
@@ -39,8 +40,9 @@ def add_to_calculation(symbol):
     text_result.delete(1.0, "end")
     text_result.insert(1.0, calculation)
 
+#Equal result (=)
 def evaluate_calculation():
-    global calculation
+    global calculation #global variables retain their value across different function calls
     print(calculation)
     try:
         result = str(eval(calculation))
@@ -53,6 +55,7 @@ def evaluate_calculation():
         text_result.insert(1.0, "Error")
         print(f"Error: {e}")
 
+#clear button
 def clear_filed():
     global calculation
     calculation = ""
