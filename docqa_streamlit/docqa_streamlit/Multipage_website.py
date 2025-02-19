@@ -35,7 +35,7 @@ pg = st.navigation(
 #----SHARED ALL PAGES---
 
 st.logo("Assets/png.png")
-st.sidebar.text("Made with 💝 by seven")
+# st.sidebar.text("Made with 💝 by seven")
 
 
 pg.run()

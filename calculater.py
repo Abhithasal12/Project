@@ -1,39 +1,15 @@
 # creating calculater 
-import tkinter as tk
 # tkinter is a python library that allows you to create a graphical user interface (GUIs).
+import tkinter as tk
+import re
 
-# database connection 
-import mysql.connector
-from datetime import datetime
-
-#connect to the database
-mydb = mysql.connector.connect(
-  host="127.0.0.1:3306",
-  user="root",
-  password="",
-  database="my_calculator"
-)
-mycursor = mydb.cursor()
-# sql query to create column 
-sql = "INSERT INTO History (expression,result,created_at) VALUES (%s, %s,%s)"
-val = ("5+3","8", datetime.now())
-
-mycursor.execute(sql, val)
-mydb.commit()
-print("Record inserted successfully!")  
-
-mycursor.execute("SELECT * FROM history")
-rows = mycursor.fetchall()
-for row in rows:
-    print(row)
-mycursor.close()
 
 calculation = "" 
-#addition(+,-,/,*)
+#addition(+,-,/,*,%)
 def add_to_calculation(symbol):
     global calculation
     if symbol =="%":
-        calculation += "*10/100"
+        calculation += "%"
     else:
         calculation += str(symbol)
 
@@ -42,15 +18,26 @@ def add_to_calculation(symbol):
 
 #Equal result (=)
 def evaluate_calculation():
-    global calculation #global variables retain their value across different function calls
-    print(calculation)
+    global calculation
     try:
-        result = str(eval(calculation))
+        # Convert percentages properly
+        calculation_with_percent = re.sub(
+            r"(\d+(\.\d+)?)%", r"(\1/100)", calculation
+        )
+
+        # Handle cases like `183-15%` -> `183 - (183 × 15 / 100)`
+        calculation_with_percent = re.sub(
+            r"(\d+(\.\d+)?)\s*[-+*/]\s*\((\d+(\.\d+)?)/100\)",
+            lambda m: f"({m.group(1)} {m.group(0)[len(m.group(1))]} ({m.group(1)} * {m.group(3)}/100))",
+            calculation_with_percent
+        )
+
+        result = str(eval(calculation_with_percent))
         calculation = ""
         text_result.delete(1.0, "end")
         text_result.insert(1.0, result)
 
-    except  Exception as e:
+    except Exception as e:
         clear_filed()
         text_result.insert(1.0, "Error")
         print(f"Error: {e}")
@@ -68,11 +55,6 @@ def delete_filed():
     text_result.delete(1.0, "end")
     text_result.insert(1.0, calculation)  
 
-def History_filed():
-    global calculation
-    calculation = "SELECT * FROM history"
-    text_result.delete(1.0, "end")
-    text_result.insert(1.0, calculation)
 
 root = tk.Tk()
 root.geometry("300x325")
@@ -138,9 +120,6 @@ btn_delete.grid(row=6, column=3, columnspan=2)
 
 btn_clear = tk.Button(root, text="C", command=clear_filed , width=11, font= ("arial",14),background="orange")
 btn_clear.grid(row=7, column=1, columnspan=2)
-
-btn_colan = tk.Button(root, text=":", command=History_filed , width=11, font= ("arial",14),background="orange")
-btn_clear.grid(row=7, column=2)
 
 btn_eual = tk.Button(root, text="=", command=evaluate_calculation, width=11, font= ("arial",14),background="orange")
 btn_eual.grid(row=7, column=3, columnspan=2)

@@ -1,6 +1,9 @@
 #pip install customtkinter 
 import customtkinter
 from tkinter import messagebox
+import mysql.connector
+from datetime import datetime
+
 
 customtkinter.set_appearance_mode("dark")
 customtkinter.set_default_color_theme("dark-blue")
@@ -12,7 +15,26 @@ root.title("Login System")
 # Dictionary to store user credentials
 USER_CREDENTIALS = {"admin": "1234"}
 def login():
-    print("Test")
+    try:
+        mydb = mysql.connector.connect(
+        host="localhost",
+        port=3306,
+        user="root",
+        password="" ,
+        # database="my_calculator"
+        database="world"
+        )
+        print(mydb)
+        mycursor = mydb.cursor()
+
+        mycursor.execute("SELECT * FROM Login_data")
+        rows = mycursor.fetchall()
+        for row in rows:
+            print(row)
+            mycursor.close()
+    except mysql.connector.Error as err:
+        print('Error', format(err))
+        print("Test")
 
 # Function to open sign-up window
 def open_signup_window():
@@ -30,6 +52,26 @@ def open_signup_window():
 
     # Function to register new user
     def register():
+        try:
+            mydb = mysql.connector.connect(
+            host="localhost",
+            port=3306,
+            user="root",
+            password="" ,
+            database="world"
+            )
+            print(mydb)
+            mycursor = mydb.cursor()
+
+            mycursor.execute("SELECT * FROM Login_data")
+            rows = mycursor.fetchall()
+            for row in rows:
+                print(row)
+                mycursor.close()
+        except mysql.connector.Error as err:
+            print('Error', format(err))
+            print("Test")
+        
         new_username = new_username_entry.get()
         new_password = new_password_entry.get()
 
