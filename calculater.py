@@ -68,6 +68,12 @@ def delete_filed():
     text_result.delete(1.0, "end")
     text_result.insert(1.0, calculation)  
 
+def History_filed():
+    global calculation
+    calculation = "SELECT * FROM history"
+    text_result.delete(1.0, "end")
+    text_result.insert(1.0, calculation)
+
 root = tk.Tk()
 root.geometry("300x325")
 root.title("calculator")
@@ -132,6 +138,9 @@ btn_delete.grid(row=6, column=3, columnspan=2)
 
 btn_clear = tk.Button(root, text="C", command=clear_filed , width=11, font= ("arial",14),background="orange")
 btn_clear.grid(row=7, column=1, columnspan=2)
+
+btn_colan = tk.Button(root, text=":", command=History_filed , width=11, font= ("arial",14),background="orange")
+btn_clear.grid(row=7, column=2)
 
 btn_eual = tk.Button(root, text="=", command=evaluate_calculation, width=11, font= ("arial",14),background="orange")
 btn_eual.grid(row=7, column=3, columnspan=2)
