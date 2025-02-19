@@ -69,7 +69,7 @@ def open_signup_window():
                 print(row)
                 mycursor.close()
         except mysql.connector.Error as err:
-            print('Error', format(err))
+            print('Error', format(err)) 
             print("Test")
         
         new_username = new_username_entry.get()
