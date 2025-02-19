@@ -20,7 +20,7 @@ def add_to_calculation(symbol):
 def evaluate_calculation():
     global calculation
     try:
-        # Convert percentages properly
+        # Convert percentages properly 
         calculation_with_percent = re.sub(
             r"(\d+(\.\d+)?)%", r"(\1/100)", calculation
         )
