@@ -1,7 +1,37 @@
 # creating calculater 
 # tkinter is a python library that allows you to create a graphical user interface (GUIs).
 import tkinter as tk
-import re
+import re # regular expressions
+
+# database connection 
+import mysql.connector
+#from datetime import datetime
+
+#connect to the database
+mydb = mysql.connector.connect(
+    host="localhost",
+    port=3306,
+    user="root",
+    password="" ,
+    database="my_calculator"
+)
+#print(mydb)
+mycursor = mydb.cursor()
+
+mycursor.execute("SELECT * FROM my_calculator.history")
+rows = mycursor.fetchall()
+for row in rows:
+    print(row)
+#mycursor.close()
+    
+# sql query to create column 
+# sql= "INSERT INTO history (expression,result), Value(%s, %s)"
+# val= ("5+3","8")
+
+# mycursor.execute(sql,val)
+
+# mydb.commit()
+# print("Record inserted successfully!")  
 
 
 calculation = "" 
@@ -17,13 +47,13 @@ def add_to_calculation(symbol):
     text_result.insert(1.0, calculation)
 
 #Equal result (=)
-def evaluate_calculation():
+def evaluate_calculation(): # eval() is built in function that evaluate a string as a python expression and retrun the result
     global calculation
-    try:
+    try: # used for exception handling 
         # Convert percentages properly 
-        calculation_with_percent = re.sub(
+        calculation_with_percent = re.sub(                   
             r"(\d+(\.\d+)?)%", r"(\1/100)", calculation
-        )
+        ) # regular expressions
 
         # Handle cases like `183-15%` -> `183 - (183 × 15 / 100)`
         calculation_with_percent = re.sub(
@@ -31,7 +61,9 @@ def evaluate_calculation():
             lambda m: f"({m.group(1)} {m.group(0)[len(m.group(1))]} ({m.group(1)} * {m.group(3)}/100))",
             calculation_with_percent
         )
-
+        #m.group(1): The first number before the operator.
+        #m.group(0)[len(m.group(1))]: Extracts the operator (+, -, *, /).  
+        #m.group(3): The percentage numerator.
         result = str(eval(calculation_with_percent))
         calculation = ""
         text_result.delete(1.0, "end")
@@ -54,6 +86,12 @@ def delete_filed():
     calculation = calculation[:-1]
     text_result.delete(1.0, "end")
     text_result.insert(1.0, calculation)  
+
+def History_filed():
+    global calculation
+    calculation = mycursor.execute()
+    text_result.delete(1.0, "end")
+    text_result.insert(1.0, calculation)
 
 
 root = tk.Tk()
@@ -114,12 +152,16 @@ btn_zero.grid(row=5, column=1)
 btn_percent = tk.Button(root, text="%", command=lambda: add_to_calculation("%"), width=5, font= ("arial",14),background="yellow")
 btn_percent.grid(row=6, column=1)
 
+btn_colan = tk.Button(root, text=":", command=History_filed , width=5, font= ("arial",14),background="orange")
+btn_colan.grid(row=6, column=2)
+
 # This three button have spacific reasons 
 btn_delete = tk.Button(root, text="DEL", command=delete_filed, width=11, font= ("arial",14),background="orange")
 btn_delete.grid(row=6, column=3, columnspan=2) 
 
 btn_clear = tk.Button(root, text="C", command=clear_filed , width=11, font= ("arial",14),background="orange")
 btn_clear.grid(row=7, column=1, columnspan=2)
+
 
 btn_eual = tk.Button(root, text="=", command=evaluate_calculation, width=11, font= ("arial",14),background="orange")
 btn_eual.grid(row=7, column=3, columnspan=2)

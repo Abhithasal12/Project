@@ -5,7 +5,7 @@ import mysql.connector
 #connect to the database
 try:
     mydb = mysql.connector.connect(
-    host="127.0.0.1",
+    host="Localhost",
     port=3306,
     user="root",
     password="" ,
@@ -35,8 +35,6 @@ except mysql.connector.Error as err:
 
 # btn_colan = tk.Button(root, text=":", command=History_filed , width=11, font= ("arial",14),background="orange")
 # btn_clear.grid(row=7, column=2)
-
-
 
 # # sql query to create column 
 # sql = "INSERT INTO history (expression,result) VALUES (%s, %s)"

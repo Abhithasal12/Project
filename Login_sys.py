@@ -28,6 +28,7 @@ def login():
         mycursor = mydb.cursor()
 
         mycursor.execute("SELECT * FROM Login_data")
+        
         rows = mycursor.fetchall()
         for row in rows:
             print(row)
